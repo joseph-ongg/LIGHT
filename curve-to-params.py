@@ -3,7 +3,7 @@ from scipy.optimize import minimize
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = np.loadtxt("Data/testing/curve_2024_053.dat")                                                                       
+data = np.loadtxt("testing/curve_2024_053.dat")                                                                       
 times = data[:, 0]
 mags = data[:, 1] 
 errs = data[:, 2]  
