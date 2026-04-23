@@ -1,0 +1,16 @@
+OGLE-2023-BLG-0039
+
+Field          BLG515.07
+StarNo         138504
+RA(J2000.0)    18:01:14.68
+Dec(J2000.0)   -32:45:16.4
+Remarks        Mistake - variable star
+
+  Tmax   2460039.288     0.051
+  tau          7.647     0.114
+  umin         0.254     0.008
+  Amax         4.025     0.119
+  Dmag         1.512     0.032
+  fbl          1.000     0.000
+  I_bl        16.679     0.003
+  I0          16.679     0.003

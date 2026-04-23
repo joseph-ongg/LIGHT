@@ -1,0 +1,16 @@
+OGLE-2011-BLG-1349
+
+Field          BLG653.20
+StarNo         79222
+RA(J2000.0)    17:35:55.33
+Dec(J2000.0)   -28:28:12.1
+Remarks        microlensing? Var. star?
+
+  Tmax   2455811.574     0.238
+  tau        276.078    23.297
+  umin         0.116     0.012
+  Amax         8.636     0.852
+  Dmag         2.341     0.000
+  fbl          0.076     0.008
+  I_bl        16.026     0.002
+  I0          18.830     0.116

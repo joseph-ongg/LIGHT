@@ -24,20 +24,22 @@ def parse_params(path):
             parts = line.strip().split()
             if len(parts) >= 2 and parts[0] in wanted:
                 values[parts[0]] = float(parts[1])
+    """values["tau"] = np.log(values['tau'])
+    fbl = np.clip(values['fbl'], 1e-4, 1 - 1e-4)
+    values['fbl'] = np.log(fbl/(1-fbl))"""
     return np.array([values[k] for k in wanted])
 
 class MicrolensingDataset(Dataset):
     def __init__(self, file_paths, file_paths_params, stats=None):
-        self.file_paths = file_paths
-        self.params_paths = file_paths_params
+        self.file_paths = []
+        self.params_paths = []
         self.param_list = []
         self.curve_list = []
         self.first_times = []
         self.i_bl_guesses = []
 
-        for curve, param in zip(self.file_paths, self.params_paths):
-            cv = np.loadtxt(curve, comments=["#", "col"], usecols=(0,1))
-            cv = cv[:,:2]
+        for curve, param in zip(file_paths, file_paths_params):
+            cv = np.loadtxt(curve, comments=["#", "col"], usecols=(0,1,2))
             pm = parse_params(param)
             I_bl_guess = np.median(cv[0:20, 1])
             mag_std = np.std(cv[0:20, 1])
@@ -63,6 +65,8 @@ class MicrolensingDataset(Dataset):
             self.curve_list.append(cv)
             self.first_times.append(first_time)
             self.i_bl_guesses.append(I_bl_guess)
+            self.file_paths.append(curve)
+            self.params_paths.append(param)
             #need to feed first_time and i_bl_guess to model somehow, TODO
         self.param_list = np.stack(self.param_list)
         if stats:
@@ -89,7 +93,7 @@ class MicrolensingDataset(Dataset):
         peak_idx = np.argmin(lc[:, 1])
 
         # set the minimum history to be after the peak
-        min_history_after_peak = peak_idx + 2
+        min_history_after_peak = peak_idx + 5
 
         # if the file is weird and the peak is at the very end, we can't cut after it.
         if min_history_after_peak >= total_length - 2:
@@ -185,11 +189,11 @@ def load_data(filepath, stats=None):
 if __name__ == "__main__":
 
     #------------
-    dataset, dataloader = load_data("training")
+    dataset, dataloader = load_data("training 2")
     print("\nGetting graph of original data vs what will be passed onto model")
 
     # create a temporary dataloader WITHOUT shuffling so we can match the file
-    test_loader = DataLoader(dataset, batch_size=8, collate_fn=pad_collate, shuffle=False)
+    test_loader = DataLoader(dataset, batch_size=128, collate_fn=pad_collate, shuffle=False)
 
     for X_padded, y_stacked, lengths, gap_masks, ft_stacked, ibl_stacked in test_loader:
 

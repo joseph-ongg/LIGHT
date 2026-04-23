@@ -1,0 +1,16 @@
+OGLE-2011-BLG-0696
+
+Field          BLG511.10
+StarNo         176230
+RA(J2000.0)    18:04:10.82
+Dec(J2000.0)   -27:30:18.8
+Remarks        Long term variable star
+
+  Tmax   2455743.515     0.144
+  tau          8.257     0.179
+  umin         1.724     0.006
+  Amax         1.092     0.001
+  Dmag         0.096     0.000
+  fbl          1.000     0.000
+  I_bl        16.480     0.000
+  I0          16.480     0.000

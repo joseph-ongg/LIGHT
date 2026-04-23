@@ -1,0 +1,16 @@
+OGLE-2011-BLG-0322
+
+Field          BLG512.13
+StarNo         208758
+RA(J2000.0)    18:02:09.89
+Dec(J2000.0)   -28:41:47.4
+Remarks        Low amplitude, long term variable
+
+  Tmax   2455792.997     2.240
+  tau        146.772     3.258
+  umin         1.782     0.006
+  Amax         1.084     0.001
+  Dmag         0.088     0.001
+  fbl          1.000     0.000
+  I_bl        16.371     0.001
+  I0          16.371     0.001

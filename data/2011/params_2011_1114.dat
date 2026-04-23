@@ -1,0 +1,16 @@
+OGLE-2011-BLG-1114
+
+Field          BLG512.11
+StarNo         140884
+RA(J2000.0)    18:03:45.64
+Dec(J2000.0)   -28:46:34.9
+Remarks        Flare? Binary microlensing?
+
+  Tmax   2455769.621     0.003
+  tau          0.182     0.007
+  umin         0.528     0.009
+  Amax         2.085     0.029
+  Dmag         0.798     0.001
+  fbl          1.000     0.000
+  I_bl        18.694     0.001
+  I0          18.694     0.001

@@ -1,0 +1,16 @@
+OGLE-2012-BLG-0711
+
+Field          BLG505.03
+StarNo         22510
+RA(J2000.0)    17:58:29.69
+Dec(J2000.0)   -29:42:26.6
+Remarks        Photometry contaminated by an eclipsing neighbor (P=2.6706 days)
+
+  Tmax   2456066.996     0.078
+  tau          3.819     0.106
+  umin         1.044     0.009
+  Amax         1.312     0.006
+  Dmag         0.294     0.001
+  fbl          1.000     0.000
+  I_bl        18.998     0.001
+  I0          18.998     0.001

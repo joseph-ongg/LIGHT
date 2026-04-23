@@ -1,0 +1,16 @@
+OGLE-2011-BLG-0993
+
+Field          BLG501.24
+StarNo         38256
+RA(J2000.0)    17:49:54.18
+Dec(J2000.0)   -29:40:09.1
+Remarks        Microlensing of variable star?
+
+  Tmax   2455802.523     0.005
+  tau         28.378     0.010
+  umin         0.409     0.000
+  Amax         2.594     0.001
+  Dmag         1.035     0.000
+  fbl          1.000     0.000
+  I_bl        15.077     0.000
+  I0          15.077     0.000

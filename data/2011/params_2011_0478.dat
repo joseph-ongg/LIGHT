@@ -1,0 +1,16 @@
+OGLE-2011-BLG-0478
+
+Field          BLG501.14
+StarNo         50642
+RA(J2000.0)    17:50:35.80
+Dec(J2000.0)   -29:58:31.1
+Remarks        Long amplitude, long term variable
+
+  Tmax   2455864.237     8.715
+  tau        160.032     7.430
+  umin         1.787     0.016
+  Amax         1.084     0.002
+  Dmag         0.087     0.001
+  fbl          1.000     0.000
+  I_bl        17.120     0.001
+  I0          17.120     0.001

@@ -1,0 +1,16 @@
+OGLE-2014-BLG-1822
+
+Field          BLG512.05
+StarNo         11364N
+RA(J2000.0)    18:02:02.63
+Dec(J2000.0)   -29:10:03.5
+Remarks        New object channel. Arificial baseline star of I=20.2 mag added
+
+  Tmax   2456880.887     0.001
+  tau         11.374     0.340
+  umin         0.000     0.001
+  Amax     1987803.5        -
+  Dmag        15.746     0.000
+  fbl          0.684     0.020
+  I_bl        19.840     0.007
+  I0          20.253     0.038

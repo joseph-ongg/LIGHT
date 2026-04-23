@@ -1,0 +1,16 @@
+OGLE-2016-BLG-1371
+
+Field          BLG511.07
+StarNo         7036N
+RA(J2000.0)    18:00:50.69
+Dec(J2000.0)   -27:45:11.0
+Remarks        New object channel. Arificial baseline star of I=20.2 mag added
+
+  Tmax   2457582.256     0.006
+  tau         13.049     0.160
+  umin         0.042     0.001
+  Amax        23.619     0.299
+  Dmag         3.433     0.000
+  fbl          1.000     0.000
+  I_bl        20.277     0.008
+  I0          20.277     0.008

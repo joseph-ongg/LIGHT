@@ -1,0 +1,16 @@
+OGLE-2013-BLG-0665
+
+Field          BLG518.21
+StarNo         47548
+RA(J2000.0)    18:08:26.85
+Dec(J2000.0)   -26:40:54.0
+Remarks        MOA-2013-BLG-300. Microlensing of a RR Lyr star (OGLE-BLG-RRLYR-14277)?
+
+  Tmax   2456425.677     0.021
+  tau         31.463     0.044
+  umin         0.420     0.000
+  Amax         2.536     0.002
+  Dmag         1.011     0.000
+  fbl          1.000     0.000
+  I_bl        16.628     0.000
+  I0          16.628     0.000

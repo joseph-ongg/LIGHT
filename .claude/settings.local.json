@@ -13,7 +13,10 @@
       "Read(//tmp/**)",
       "Bash(wait)",
       "Bash(cat C:\\\\\\\\Users\\\\\\\\ongjo\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\C--Users-ongjo-coding-LIGHT\\\\\\\\f1137faf-ac39-4db4-8d6a-412b39c9ede5\\\\\\\\tasks\\\\\\\\bdyfhoiyi.output)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(mkdir -p data/2004)",
+      "Bash(cp training/2004/*.dat data/2004/)",
+      "Bash(cp testing/*2004*.dat data/2004/)"
     ]
   }
 }
