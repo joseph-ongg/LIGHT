@@ -1,7 +1,7 @@
 from ulab_data_edited import load_data  
 import numpy as np                                                                                      
-train_dataset, _ = load_data("training 2")                                                              
-test_dataset, _ = load_data("testing", [train_dataset.pmeans, train_dataset.pstds])                   
+train_dataset, _ = load_data("training 3")                                                              
+test_dataset, _ = load_data("testing 3", [train_dataset.pmeans, train_dataset.pstds])                   
 np.savez("test_data.npz",                                                                               
     pmeans=train_dataset.pmeans,  # IMPORTANT: training stats, not test                                 
     pstds=train_dataset.pstds,

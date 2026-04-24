@@ -2,15 +2,14 @@ from ulab_data_edited import MicrolensingDataset, pad_collate, compute_gap_mask,
 import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
-torch.set_num_threads(8)
 
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.lstm = nn.LSTM(input_size=3, hidden_size=64,num_layers=2)
-        self.fc1 = nn.Linear(64,16)
+        self.lstm = nn.LSTM(input_size=3, hidden_size=256,num_layers=3,dropout=0.2)
+        self.fc1 = nn.Linear(256,64)
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(16,5)
+        self.fc2 = nn.Linear(64,5)
 
     def forward(self, x):
         out, (hidden, cell) = self.lstm(x)

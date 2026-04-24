@@ -28,9 +28,9 @@ def mse(params, times, mags):
 
 def one_curve(year, cid, plot, cutoff=None):
     model = Model()
-    model.load_state_dict(torch.load("best_model_422.pt"))
+    model.load_state_dict(torch.load("best_model_newdata2.pt", map_location="cpu"))
     model.eval()
-    d = np.load("test_data.npz", allow_pickle=True)
+    d = np.load("test_data_newdata.npz", allow_pickle=True)
     pmeans = d['pmeans']; pstds = d['pstds']
     file_paths = d['file_paths']
     curves = d['curve_list']
@@ -42,7 +42,7 @@ def one_curve(year, cid, plot, cutoff=None):
     cv = curves[idx]
     ft = first_times[idx]
     ibl = ibls[idx]
-    true_params = parse_params(f"testing 2/{year}/params_{year}_{cid}.dat")
+    true_params = parse_params(f"testing 3/{year}/params_{year}_{cid}.dat")
     #true_params[1] = np.exp(true_params[1])
     #true_params[3] = 1/(1+np.exp(-true_params[3]))
 
@@ -60,7 +60,7 @@ def one_curve(year, cid, plot, cutoff=None):
     #pred_real[0,3] = torch.sigmoid(pred_real[0,3])
     print(pred_real)
 
-    data = np.loadtxt(f"testing 2/{year}/curve_{year}_{cid}.dat", comments=["#","col"])
+    data = np.loadtxt(f"testing 3/{year}/curve_{year}_{cid}.dat", comments=["#","col"])
     import glob as _glob
     _matches = _glob.glob(f"data/{year}/curve_{year}_*{int(cid)}.dat")
     _matches = [m for m in _matches if int(m.rsplit("_", 1)[1].split(".")[0]) == int(cid)]
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, required=True)
     parser.add_argument("--cid", required=True)
-    parser.add_argument("--plot", type=bool, required=True)
+    parser.add_argument("--plot", type=bool, default=True)
     parser.add_argument("--cutoff", type=int, default=None)
     args = parser.parse_args()
     one_curve(args.year, args.cid, args.plot, args.cutoff)

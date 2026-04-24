@@ -1,0 +1,16 @@
+OGLE-2017-BLG-0337
+
+Field          BLG609.05
+StarNo         70407
+RA(J2000.0)    17:38:58.15
+Dec(J2000.0)   -35:20:29.5
+Remarks        Microlensing of eclipsing binary with P=1.75162 days
+
+  Tmax   2457831.156     0.127
+  tau         64.901    14.920
+  umin         0.038     0.010
+  Amax        26.398     6.904
+  Dmag         3.554     0.000
+  fbl          0.101     0.027
+  I_bl        18.971     0.004
+  I0          21.459     0.294

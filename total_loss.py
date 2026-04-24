@@ -2,7 +2,7 @@ import numpy as np
 import os
 from curve_to_params import one_curve
 
-d = np.load("test_data.npz", allow_pickle=True)
+d = np.load("test_data_newdata.npz", allow_pickle=True)
 pmeans = d['pmeans']; pstds = d['pstds']
 file_paths = d['file_paths']
 curves = d['curve_list']
