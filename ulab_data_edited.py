@@ -37,25 +37,58 @@ class MicrolensingDataset(Dataset):
         self.curve_list = []
         self.first_times = []
         self.i_bl_guesses = []
+        self.event_end_idxs = []
 
         for curve, param in zip(file_paths, file_paths_params):
             cv = np.loadtxt(curve, comments=["#", "col"], usecols=(0,1,2))
             pm = parse_params(param)
             I_bl_guess = np.median(cv[0:20, 1])
             mag_std = np.std(cv[0:20, 1])
-            num_over_std = 0
+            peak_global_idx = int(np.argmin(cv[:, 1]))
+
+            # event_start: search BACKWARD from peak for 5 consecutive baseline points
+            num_in_baseline = 0
             event_start_idx = -1
-            for i in range(len(cv[:,1])):
-                if cv[i,1] <= I_bl_guess - 2 * mag_std:
-                    num_over_std += 1
+            for i in range(peak_global_idx - 1, -1, -1):
+                if cv[i, 1] > I_bl_guess - 2 * mag_std:
+                    num_in_baseline += 1
                 else:
-                    num_over_std = 0
-                if num_over_std == 5:
-                    event_start_idx = i
+                    num_in_baseline = 0
+                if num_in_baseline == 5:
+                    event_start_idx = i + 4
                     break
+            # fallback: forward search from start of curve
+            if event_start_idx == -1:
+                num_over_std = 0
+                for i in range(len(cv)):
+                    if cv[i,1] <= I_bl_guess - 2 * mag_std:
+                        num_over_std += 1
+                    else:
+                        num_over_std = 0
+                    if num_over_std == 5:
+                        event_start_idx = i - 4
+                        break
             if event_start_idx == -1:
                 continue
-            cv = cv[max(0,event_start_idx-20):, :]
+
+            # event_end: forward search, 5 consecutive baseline points after peak
+            num_in_baseline = 0
+            event_end_global_idx = len(cv) - 1
+            for i in range(peak_global_idx + 1, len(cv)):
+                if cv[i, 1] > I_bl_guess - 2 * mag_std:
+                    num_in_baseline += 1
+                else:
+                    num_in_baseline = 0
+                if num_in_baseline == 5:
+                    event_end_global_idx = i - 4
+                    break
+
+            trim_start = max(0, event_start_idx - 50)
+            trim_end = min(len(cv), event_end_global_idx + 50)
+            if trim_end - trim_start < 25 or event_end_global_idx <= event_start_idx:
+                continue
+            cv = cv[trim_start:trim_end, :]
+            event_end_local = event_end_global_idx - trim_start
             first_time = cv[0,0]
             cv[:, 0] -= first_time
             cv[:, 1] -= I_bl_guess
@@ -67,6 +100,7 @@ class MicrolensingDataset(Dataset):
             self.i_bl_guesses.append(I_bl_guess)
             self.file_paths.append(curve)
             self.params_paths.append(param)
+            self.event_end_idxs.append(event_end_local)
             #need to feed first_time and i_bl_guess to model somehow, TODO
         self.param_list = np.stack(self.param_list)
         if stats:
@@ -89,19 +123,26 @@ class MicrolensingDataset(Dataset):
         # pick a random cut-off index + ensure there is at least some minimum history and some future to predict
         total_length = len(lc)
 
-        # find the peak of the event (np.argmin finds the index of the lowest value in an array)
-        peak_idx = np.argmin(lc[:, 1])
+        # find the peak of the event
+        peak_idx = int(np.argmin(lc[:, 1]))
+        event_end_idx = self.event_end_idxs[idx]
 
-        # set the minimum history to be after the peak
-        min_history_after_peak = peak_idx + 5
-
-        # if the file is weird and the peak is at the very end, we can't cut after it.
-        if min_history_after_peak >= total_length - 2:
-            cutoff_idx = total_length - 1  # Just predict the very last point
-
+        # 50% chance: magnitude-uniform cutoff within active descent
+        # 50% chance: cutoff lands in [event_end, event_end+50] post-event tail
+        post_max = min(event_end_idx + 50, total_length - 1)
+        if peak_idx + 1 >= event_end_idx:
+            cutoff_idx = total_length - 1
+        elif random.random() < 0.5:
+            peak_mag = lc[peak_idx, 1]
+            baseline_mag = lc[event_end_idx, 1]
+            target_mag = random.uniform(peak_mag, baseline_mag)
+            cutoff_idx = event_end_idx
+            for i in range(peak_idx + 1, event_end_idx + 1):
+                if lc[i, 1] >= target_mag:
+                    cutoff_idx = i
+                    break
         else:
-            #pick a random cut-off that is AFTER the peak but before the very end of the file.
-            cutoff_idx = random.randint(min_history_after_peak, total_length - 2)
+            cutoff_idx = random.randint(event_end_idx, post_max)
 
         # split into input (X) and target (y)
         # X: everything up to the cutoff (Shape: [cutoff_idx, 2])
