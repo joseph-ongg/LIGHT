@@ -41,7 +41,7 @@ all_trues = np.array(all_trues)
 all_preds = np.array(all_preds)
 all_preds_scipy = np.array(all_preds_scipy)
 
-np.savez("testdata2.npz",
+np.savez("testdata.npz",
     pmeans=train_dataset.pmeans,
     pstds=train_dataset.pstds,
     file_paths=np.array(test_dataset.file_paths),

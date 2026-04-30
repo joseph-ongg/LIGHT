@@ -16,7 +16,12 @@
       "Bash(python *)",
       "Bash(mkdir -p data/2004)",
       "Bash(cp training/2004/*.dat data/2004/)",
-      "Bash(cp testing/*2004*.dat data/2004/)"
+      "Bash(cp testing/*2004*.dat data/2004/)",
+      "Bash(mv \"C:\\\\Users\\\\ongjo\\\\coding\\\\LIGHT\\\\old stuff\" \"C:\\\\Users\\\\ongjo\\\\Downloads\\\\LIGHT_old_stuff\")",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)"
     ]
   }
 }
