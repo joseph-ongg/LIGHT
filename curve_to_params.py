@@ -3,9 +3,9 @@ from scipy.optimize import minimize
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-from predictor import Model
+from trainer import Model
 from torch.nn.utils.rnn import pack_padded_sequence
-from ulab_data_edited import parse_params
+from data_prep import parse_params
 
 
 def compute_curve(t, Tmax, tau, umin, fbl, I_bl):
@@ -38,7 +38,7 @@ def mse(params, times, mags):
 
 def run_one(year, cid, cv, ft, ibl, model, pmeans, pstds, plot=False):
     """Core inference + scipy refinement for a single curve. No file loading of testdata.npz."""
-    true_params = parse_params(f"testing 3 cutoff/{year}/params_{year}_{cid}.dat")
+    true_params = parse_params(f"testing/{year}/params_{year}_{cid}.dat")
     #true_params[1] = np.exp(true_params[1])
     #true_params[3] = 1/(1+np.exp(-true_params[3]))
 
@@ -56,7 +56,7 @@ def run_one(year, cid, cv, ft, ibl, model, pmeans, pstds, plot=False):
     #pred_real[0,3] = torch.sigmoid(pred_real[0,3])
     #print(pred_real)
 
-    data = np.loadtxt(f"testing 3 cutoff/{year}/curve_{year}_{cid}.dat", comments=["#","col"])
+    data = np.loadtxt(f"testing/{year}/curve_{year}_{cid}.dat", comments=["#","col"])
     import glob as _glob
     _matches = _glob.glob(f"data/{year}/curve_{year}_*{int(cid)}.dat")
     _matches = [m for m in _matches if int(m.rsplit("_", 1)[1].split(".")[0]) == int(cid)]
@@ -92,15 +92,25 @@ def run_one(year, cid, cv, ft, ibl, model, pmeans, pstds, plot=False):
         fd_mask = fulldata[:, 0] >= lstm_start_time
         fulldata = fulldata[fd_mask]
         t_grid = np.linspace(fulldata[:,0].min(), fulldata[:,0].max(), 500)
-        plt.scatter(fulldata[:,0], fulldata[:,1], color="green",s=15, zorder=3, label="Full Curve")
-        plt.scatter(cv[:, 0] + ft, cv[:, 1] + ibl, color="blue", s=15, zorder=3, label="LSTM input")
-        plt.plot(t_grid, compute_curve(t_grid, *result.x), color="orange", label = "LSTM + Chi2 Optimizer")
-        plt.plot(t_grid, compute_curve(t_grid, *pred_real.squeeze().numpy()), color="purple",label="LSTM Only")
-        plt.title(f"Predictions of curve-{year}-{cid}")
-        plt.xlabel("Time (HJD)")
-        plt.ylabel("Magnitude")
-        plt.gca().invert_yaxis()
-        plt.legend()
+        residuals = fulldata[:, 1] - compute_curve(fulldata[:, 0], *result.x)
+        peak_mag = cv[:,1].min()
+        baseline_mag = 0  # already 0 in cv coords, or use I_bl
+        cutoff_mag = cv[-1, 1]
+        mag_frac = (cutoff_mag - peak_mag) / (baseline_mag - peak_mag)
+        fig, axs = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+        axs[0].scatter(fulldata[:,0], fulldata[:,1], color="green", s=15, zorder=3, label="Full Curve")
+        axs[0].scatter(cv[:, 0] + ft, cv[:, 1] + ibl, color="blue", s=15, zorder=3, label="LSTM input")
+        axs[0].plot(t_grid, compute_curve(t_grid, *result.x), color="orange", label="LSTM + Chi2 Optimizer")
+        axs[0].plot(t_grid, compute_curve(t_grid, *pred_real.squeeze().numpy()), color="purple", label="LSTM Only")
+        axs[0].set_title(f"Predictions of curve-{year}-{cid}, {50+mag_frac*100.0:.0f}% event observed")
+        axs[0].set_ylabel("Magnitude")
+        axs[0].invert_yaxis()
+        axs[0].legend()
+        axs[1].scatter(fulldata[:, 0], residuals, s=10, color="black")
+        axs[1].axhline(0, color="red", linestyle="--")
+        axs[1].set_xlabel("Time (HJD)")
+        axs[1].set_ylabel("Residual (mag)")
+        plt.tight_layout()
         plt.savefig("degen.png")
         plt.show()
     return true_params, pred_real.squeeze().numpy(), result.x
@@ -109,12 +119,12 @@ def run_one(year, cid, cv, ft, ibl, model, pmeans, pstds, plot=False):
 def one_curve(year, cid, plot, cutoff=None):
     """CLI wrapper: loads testdata.npz + model, then calls run_one."""
     model = Model()
-    model.load_state_dict(torch.load("best_model_cutoff.pt", map_location="cpu"))
+    model.load_state_dict(torch.load("best_model.pt", map_location="cpu"))
     model.eval()
     d = np.load("testdata.npz", allow_pickle=True)
     pmeans = d['pmeans']; pstds = d['pstds']
     file_paths = d['file_paths']
-    curves = d['curve_list']
+    curves = d['cut_curves']
     first_times = d['first_times']
     ibls = d['i_bl_guesses']
 
